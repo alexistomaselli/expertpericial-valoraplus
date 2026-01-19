@@ -11,7 +11,7 @@ const ResetPassword = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { updatePassword, session } = useAuth();
+    const { updatePassword, session, profile } = useAuth();
     const navigate = useNavigate();
     const { toast } = useToast();
 
@@ -59,7 +59,17 @@ const ResetPassword = () => {
         setIsSubmitting(false);
 
         if (result.success) {
-            navigate("/login");
+            toast({
+                title: "Contraseña actualizada",
+                description: "Tu contraseña ha sido cambiada correctamente.",
+            });
+
+            // Redirección inteligente basada en el rol
+            if (profile?.role === 'admin') {
+                navigate("/admin/dashboard");
+            } else {
+                navigate("/app/micuenta");
+            }
         }
     };
 
