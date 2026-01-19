@@ -1,11 +1,12 @@
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { 
-  Shield, 
-  Users, 
-  Building2, 
-  BarChart3, 
-  Settings, 
+import {
+  Shield,
+  User,
+  Users,
+  Building2,
+  BarChart3,
+  Settings,
   LogOut,
   Menu,
   X,
@@ -31,12 +32,6 @@ const AdminLayout = () => {
       href: "/admin/dashboard",
       icon: BarChart3,
       current: location.pathname === "/admin/dashboard"
-    },
-    {
-      name: "Usuarios",
-      href: "/admin/users",
-      icon: Users,
-      current: location.pathname === "/admin/users"
     },
     {
       name: "Talleres",
@@ -85,11 +80,10 @@ const AdminLayout = () => {
                     key={item.name}
                     to={item.href}
                     onClick={() => setSidebarOpen(false)}
-                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                      item.current
-                        ? "bg-primary/80 text-primary-foreground"
-                        : "text-primary-foreground/80 hover:bg-primary/60 hover:text-primary-foreground"
-                    }`}
+                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${item.current
+                      ? "bg-primary/80 text-primary-foreground"
+                      : "text-primary-foreground/80 hover:bg-primary/60 hover:text-primary-foreground"
+                      }`}
                   >
                     <Icon className="mr-3 h-5 w-5" />
                     {item.name}
@@ -97,6 +91,26 @@ const AdminLayout = () => {
                 );
               })}
             </nav>
+            <div className="flex-shrink-0 border-t border-primary/40 p-2 space-y-1">
+              <Link
+                to="/admin/profile"
+                onClick={() => setSidebarOpen(false)}
+                className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${location.pathname === "/admin/profile"
+                  ? "bg-primary/80 text-primary-foreground"
+                  : "text-primary-foreground/80 hover:bg-primary/60 hover:text-primary-foreground"
+                  }`}
+              >
+                <User className="mr-3 h-5 w-5" />
+                Mi Perfil
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-red-200 hover:bg-red-600/20 hover:text-white transition-colors w-full"
+              >
+                <LogOut className="mr-3 h-5 w-5" />
+                Cerrar Sesión
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -116,11 +130,10 @@ const AdminLayout = () => {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                      item.current
-                        ? "bg-primary/80 text-primary-foreground"
-                        : "text-primary-foreground/80 hover:bg-primary/60 hover:text-primary-foreground"
-                    }`}
+                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${item.current
+                      ? "bg-primary/80 text-primary-foreground"
+                      : "text-primary-foreground/80 hover:bg-primary/60 hover:text-primary-foreground"
+                      }`}
                   >
                     <Icon className="mr-3 h-5 w-5" />
                     {item.name}
@@ -129,6 +142,25 @@ const AdminLayout = () => {
               })}
             </div>
           </nav>
+          <div className="flex-shrink-0 flex flex-col border-t border-primary/40 p-2 space-y-1">
+            <Link
+              to="/admin/profile"
+              className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${location.pathname === "/admin/profile"
+                ? "bg-primary/80 text-primary-foreground"
+                : "text-primary-foreground/80 hover:bg-primary/60 hover:text-primary-foreground"
+                }`}
+            >
+              <User className="mr-3 h-5 w-5" />
+              Mi Perfil
+            </Link>
+            <button
+              onClick={handleSignOut}
+              className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-red-200 hover:bg-red-600/20 hover:text-white transition-colors w-full"
+            >
+              <LogOut className="mr-3 h-5 w-5" />
+              Cerrar Sesión
+            </button>
+          </div>
         </div>
       </div>
 
@@ -157,10 +189,13 @@ const AdminLayout = () => {
               {/* Información del usuario */}
               <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" />
               <div className="flex items-center gap-x-4">
-                <div className="text-sm text-gray-700">
+                <Link
+                  to="/admin/profile"
+                  className="text-sm text-gray-700 hover:text-primary transition-colors cursor-pointer text-right px-2"
+                >
                   <span className="font-medium">{profile?.full_name || profile?.email}</span>
                   <div className="text-xs text-primary font-medium">Administrador</div>
-                </div>
+                </Link>
                 <Button
                   variant="outline"
                   size="sm"
