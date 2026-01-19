@@ -25,6 +25,9 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminWorkshops from "./pages/AdminWorkshops";
 import AdminAnalyses from "./pages/AdminAnalyses";
 import AdminWorkshopAnalyses from "./pages/AdminWorkshopAnalyses";
+import AdminUsers from "./pages/AdminUsers";
+import AdminSettings from "./pages/AdminSettings";
+import AdminProfile from "./pages/AdminProfile";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { AdminProtectedRoute } from "./components/AdminProtectedRoute";
@@ -59,6 +62,9 @@ const App = () => (
               <Route path="workshops" element={<AdminWorkshops />} />
               <Route path="workshops/:id/analisis" element={<AdminWorkshopAnalyses />} />
               <Route path="analisis" element={<AdminAnalyses />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="settings" element={<AdminSettings />} />
+              <Route path="profile" element={<AdminProfile />} />
             </Route>
             <Route path="/app" element={
               <ProtectedRoute>
