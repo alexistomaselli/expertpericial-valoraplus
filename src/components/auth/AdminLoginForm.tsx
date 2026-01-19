@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
-import { Loader2, Shield } from "lucide-react";
+import { Loader2, Shield, Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import {
   Dialog,
@@ -38,6 +38,7 @@ export function AdminLoginForm() {
   const navigate = useNavigate();
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -160,12 +161,26 @@ export function AdminLoginForm() {
                   <ForgotPasswordDialog />
                 </div>
                 <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Contraseña de administrador"
-                    {...field}
-                    disabled={isSubmitting}
-                  />
+                  <div className="relative">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Contraseña de administrador"
+                      {...field}
+                      disabled={isSubmitting}
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
