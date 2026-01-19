@@ -426,18 +426,6 @@ const AdminDashboard = () => {
           <CardContent>
             <div className="space-y-4">
               <button
-                onClick={() => navigate('/admin/users')}
-                className="w-full p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
-              >
-                <div className="flex items-center gap-3">
-                  <Users className="h-6 w-6 text-blue-600" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">Gestionar Usuarios</h3>
-                    <p className="text-sm text-gray-500">Ver y administrar cuentas de usuario</p>
-                  </div>
-                </div>
-              </button>
-              <button
                 onClick={() => navigate('/admin/workshops')}
                 className="w-full p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
               >
