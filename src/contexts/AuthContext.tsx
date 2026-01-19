@@ -13,6 +13,8 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
   refreshWorkshop: () => Promise<void>;
+  resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
+  updatePassword: (password: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -42,7 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .select('*')
         .eq('id', userId)
         .single();
-      
+
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(() => reject(new Error('Profile fetch timeout')), 2000); // 2 segundos timeout
       });
@@ -69,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // console.log('🔴 UPDATE AUTH STATE: session exists:', !!session);
     setSession(session);
     setUser(session?.user ?? null);
-    
+
     // Establecer loading false inmediatamente para mejor UX
     // console.log('🔴 UPDATE AUTH STATE: Setting loading to false immediately');
     setLoading(false);
@@ -79,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Cargar perfil en background sin bloquear la UI
       fetchProfile(session.user.id).then(async (userProfile) => {
         setProfile(userProfile);
-        
+
         // Si el perfil tiene workshop_id, cargar también el workshop
         if (userProfile?.workshop_id) {
           try {
@@ -135,12 +137,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           sessionPromise,
           timeoutPromise
         ]) as any;
-        
+
         // Limpiar el timeout si la operación fue exitosa
         if (timeoutId) {
           clearTimeout(timeoutId);
         }
-        
+
         if (error) {
           // console.warn('Supabase session unavailable:', error.message);
           if (mounted) {
@@ -154,7 +156,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setSession(session);
           setUser(session?.user ?? null);
           setLoading(false); // Establecer loading false inmediatamente
-          
+
           // Cargar perfil en background sin bloquear la UI
           if (session?.user) {
             fetchProfile(session.user.id).then(userProfile => {
@@ -188,7 +190,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         // console.log('🔴 AUTH STATE CHANGE:', event, session?.user?.email);
-        
+
         if (mounted) {
           // console.log('🔴 AUTH STATE: Calling updateAuthState with session:', !!session);
           await updateAuthState(session);
@@ -210,7 +212,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setLoading(true);
       // console.log('🔐 AUTH: Starting signIn process');
-      
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -232,7 +234,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         } else if (error.message.includes("Too many requests")) {
           errorMessage = "Demasiados intentos. Por favor, inténtalo más tarde.";
         }
-        
+
         toast({
           title: "Error de autenticación",
           description: errorMessage,
@@ -273,55 +275,55 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Función de cierre de sesión
   const signOut = async (): Promise<void> => {
     // console.log('🔴 LOGOUT: signOut function called');
-    
+
     // Función para limpiar todo localmente
     const forceLocalLogout = () => {
       // console.log('🔴 LOGOUT: Forcing complete local logout');
       setSession(null);
       setUser(null);
       setProfile(null);
-      
+
       // Limpiar también el localStorage de Supabase
-       try {
-         // Limpiar todas las claves que empiecen con 'sb-' (claves de Supabase)
-         Object.keys(localStorage).forEach(key => {
-           if (key.startsWith('sb-') || key.includes('supabase')) {
-             localStorage.removeItem(key);
-           }
-         });
-         // console.log('🔴 LOGOUT: LocalStorage cleared');
-       } catch (e) {
-         // console.warn('🔴 LOGOUT: Error clearing localStorage:', e);
-       }
+      try {
+        // Limpiar todas las claves que empiecen con 'sb-' (claves de Supabase)
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('sb-') || key.includes('supabase')) {
+            localStorage.removeItem(key);
+          }
+        });
+        // console.log('🔴 LOGOUT: LocalStorage cleared');
+      } catch (e) {
+        // console.warn('🔴 LOGOUT: Error clearing localStorage:', e);
+      }
     };
-    
+
     // Intentar logout de Supabase de forma no bloqueante
     try {
       // console.log('🔴 LOGOUT: Attempting Supabase signOut');
-      
+
       // Intentar logout de Supabase con timeout más generoso
       const signOutPromise = supabase.auth.signOut();
-      const timeoutPromise = new Promise((_, reject) => 
+      const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error('Supabase logout timeout')), 15000)
       );
-      
+
       await Promise.race([signOutPromise, timeoutPromise]);
       // console.log('🔴 LOGOUT: Supabase signOut completed successfully');
-      
+
     } catch (error: any) {
       // console.warn('🔴 LOGOUT: Supabase signOut failed or timed out:', error.message);
       // Continuar con logout local sin mostrar error al usuario
       // El logout local siempre debe funcionar independientemente de Supabase
     }
-    
+
     // SIEMPRE limpiar el estado local, sin importar si Supabase funcionó
     forceLocalLogout();
-    
+
     toast({
       title: "Sesión cerrada",
       description: "Has cerrado sesión exitosamente",
     });
-    
+
     // console.log('🔴 LOGOUT: Logout process completed');
   };
 
@@ -330,7 +332,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (user) {
       const userProfile = await fetchProfile(user.id);
       setProfile(userProfile);
-      
+
       // Si el perfil tiene workshop_id, cargar también el workshop
       if (userProfile?.workshop_id) {
         await refreshWorkshop();
@@ -360,6 +362,66 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const resetPassword = async (email: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        toast({
+          title: "Error al solicitar restablecimiento",
+          description: error.message,
+          variant: "destructive",
+        });
+        return { success: false, error: error.message };
+      }
+
+      toast({
+        title: "Correo enviado",
+        description: "Revisa tu bandeja de entrada para restablecer tu contraseña",
+      });
+      return { success: true };
+    } catch (error: any) {
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      return { success: false, error: errorMessage };
+    }
+  };
+
+  const updatePassword = async (password: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const { error } = await supabase.auth.updateUser({ password });
+
+      if (error) {
+        toast({
+          title: "Error al actualizar contraseña",
+          description: error.message,
+          variant: "destructive",
+        });
+        return { success: false, error: error.message };
+      }
+
+      toast({
+        title: "Contraseña actualizada",
+        description: "Tu contraseña ha sido actualizada exitosamente",
+      });
+      return { success: true };
+    } catch (error: any) {
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      return { success: false, error: errorMessage };
+    }
+  };
+
   const value: AuthContextType = {
     session,
     user,
@@ -370,6 +432,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signOut,
     refreshProfile,
     refreshWorkshop,
+    resetPassword,
+    updatePassword,
   };
 
   return (
