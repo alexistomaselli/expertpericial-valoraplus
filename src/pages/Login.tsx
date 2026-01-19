@@ -5,15 +5,19 @@ import { LoginForm } from "@/components/auth/LoginForm";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Login = () => {
-  const { session, loading } = useAuth();
+  const { session, loading, profile } = useAuth();
   const navigate = useNavigate();
 
   // Redirigir a dashboard si el usuario ya está autenticado
   useEffect(() => {
-    if (!loading && session) {
-      navigate("/app/micuenta", { replace: true });
+    if (!loading && session && profile) {
+      if (profile.role === 'admin') {
+        navigate("/admin/dashboard", { replace: true });
+      } else {
+        navigate("/app/micuenta", { replace: true });
+      }
     }
-  }, [session, loading, navigate]);
+  }, [session, loading, profile, navigate]);
 
   // Mostrar loading mientras se verifica la autenticación
   if (loading) {
@@ -44,7 +48,7 @@ const Login = () => {
           </div>
           <p className="text-primary-foreground/80">Accede para empezar tu análisis gratuito</p>
         </div>
-        
+
         <LoginForm />
       </div>
     </div>
