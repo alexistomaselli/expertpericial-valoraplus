@@ -29,3 +29,4 @@ context/
 scripts/create-admin.js
 supabase/.temp/
 .git_backup
+scripts/
