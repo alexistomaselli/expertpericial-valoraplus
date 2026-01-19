@@ -1,0 +1,16 @@
+project_id = "your-project-id"
+
+[functions.get-next-analysis-cost]
+verify_jwt = true
+
+[functions.create-payment-session]
+verify_jwt = true
+
+[functions.payment-session]
+verify_jwt = false
+
+[functions.get-payment-history]
+verify_jwt = true
+
+[functions.stripe-webhook]
+verify_jwt = false
