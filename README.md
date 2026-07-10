@@ -1,73 +1,39 @@
-# Welcome to your Lovable project
+# Valora Plus Analytics
 
-## Project info
+Este repositorio contiene el código fuente de Valora Plus Analytics. Sigue las instrucciones a continuación para configurar tu propio entorno.
 
-**URL**: https://lovable.dev/projects/7e7172e6-e11c-405e-bdac-d4170314aaef
+## 1. Configuración de la Base de Datos (Supabase)
 
-## How can I edit this code?
+Esta aplicación utiliza [Supabase](https://supabase.com) como base de datos y sistema de autenticación.
 
-There are several ways of editing your application.
+1. Crea una cuenta en Supabase y crea un nuevo proyecto.
+2. Ve a la sección **SQL Editor** en el panel de Supabase de tu proyecto.
+3. Copia el contenido completo del archivo `database_schema.sql` que se encuentra en la raíz de este proyecto.
+4. Pégalo en el SQL Editor y ejecútalo (`Run`). Esto creará de forma automática todas las tablas, funciones y políticas de seguridad necesarias.
 
-**Use Lovable**
+## 2. Variables de Entorno
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/7e7172e6-e11c-405e-bdac-d4170314aaef) and start prompting.
+Debes configurar las variables de entorno para conectar la web con tu base de datos y otros servicios.
 
-Changes made via Lovable will be committed automatically to this repo.
+1. Renombra el archivo `.env.example` a `.env`
+2. Ve a Supabase -> **Project Settings** -> **API** y copia tu `Project URL` y `anon_key`. Pégalos en `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY`.
+3. (Opcional) Completa las variables de Stripe si vas a procesar pagos, y la URL de webhook de n8n para la extracción de PDFs.
 
-**Use your preferred IDE**
+## 3. Instalación y Ejecución Local
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Para correr el proyecto en tu computadora:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Asegúrate de tener Node.js instalado.
+2. Abre una terminal en esta carpeta y ejecuta:
+   ```bash
+   npm install
+   ```
+3. Inicia el servidor de desarrollo:
+   ```bash
+   npm run dev
+   ```
+4. Abre la dirección que te indique la terminal (por ejemplo `http://localhost:8080`) en tu navegador.
 
-Follow these steps:
+## 4. Despliegue en Producción
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/7e7172e6-e11c-405e-bdac-d4170314aaef) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Puedes desplegar este código fácilmente conectando este repositorio de GitHub a plataformas como Vercel, Netlify o Easypanel. El proyecto utiliza Vite + React + TypeScript.
