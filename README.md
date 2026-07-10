@@ -34,6 +34,13 @@ Para correr el proyecto en tu computadora:
    ```
 4. Abre la dirección que te indique la terminal (por ejemplo `http://localhost:8080`) en tu navegador.
 
-## 4. Despliegue en Producción
+## 4. Despliegue en Producción (valora.plus)
 
-Puedes desplegar este código fácilmente conectando este repositorio de GitHub a plataformas como Vercel, Netlify o Easypanel. El proyecto utiliza Vite + React + TypeScript.
+El frontend de esta aplicación **ya se encuentra desplegado en Easypanel** asociado al dominio `valora.plus`. 
+
+Para que la web en producción comience a funcionar con tus propios datos, solo debes:
+1. Completar la creación y carga de la base de datos Supabase como se explica en el paso 1.
+2. Ingresar al panel de control de **Easypanel**.
+3. Ir a la sección de **Environment / Variables de Entorno** del proyecto.
+4. Completar las variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY` (junto a las demás variables necesarias que viste en `.env.example`).
+5. Guardar los cambios y redesplegar (Build / Deploy) desde Easypanel para que los cambios surtan efecto.
