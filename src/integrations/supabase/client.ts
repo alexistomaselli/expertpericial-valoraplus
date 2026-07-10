@@ -1,8 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://dummy.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || 'dummy';
+let SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://dummy.supabase.co';
+let SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || 'dummy';
+
+// Protect against placeholder values that cause URL malformed crashes
+if (SUPABASE_URL.includes('<') || SUPABASE_URL.includes('>')) {
+  SUPABASE_URL = 'https://dummy.supabase.co';
+}
 
 // Removemos el throw Error para que la app no tire pantalla blanca si faltan variables
 // if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
