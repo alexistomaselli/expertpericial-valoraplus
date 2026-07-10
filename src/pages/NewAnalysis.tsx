@@ -587,7 +587,7 @@ const NewAnalysis = () => {
       // PASO 4: Enviar archivo a n8n para extracción de texto
       console.log('=== ENVIANDO ARCHIVO A N8N PARA EXTRACCIÓN ===');
       
-      const webhookUrl = 'https://bot-bitrix-n8n.uhcoic.easypanel.host/webhook/23154e6f-420b-4186-be36-8b7585da797a';
+      const webhookUrl = import.meta.env.VITE_N8N_PDF_WORKFLOW_URL || 'https://bot-bitrix-n8n.uhcoic.easypanel.host/webhook/23154e6f-420b-4186-be36-8b7585da797a';
       
       const formData = new FormData();
       formData.append('file', file);

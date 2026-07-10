@@ -17,7 +17,8 @@ Debes configurar las variables de entorno para conectar la web con tu base de da
 
 1. Renombra el archivo `.env.example` a `.env`
 2. Ve a Supabase -> **Project Settings** -> **API** y copia tu `Project URL` y `anon_key`. Pégalos en `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY`.
-3. (Opcional) Completa las variables de Stripe si vas a procesar pagos, y la URL de webhook de n8n para la extracción de PDFs.
+3. (Opcional) Completa las variables de Stripe si vas a procesar pagos, y las variables de OpenAI.
+4. **N8N:** Completa la variable `VITE_N8N_PDF_WORKFLOW_URL`. Recuerda que el sistema utiliza la instancia de **n8n que ya se encuentra desplegada en Easypanel** (usualmente bajo el dominio `workflows.valora.plus`). Asegúrate de colocar la URL completa del Webhook correspondiente al flujo de extracción de PDFs.
 
 ## 3. Instalación y Ejecución Local
 
